@@ -64,6 +64,15 @@ export default function Timer() {
         }, 1000);
     }
 
+    const resetTimer = () => {
+        clearInterval(intervalRef.current);
+        totalSecondsRef.current = 0;
+        updateDisplay(0);
+        setIsActive(false);
+        setIsPaused(false);
+        sessionStorage.removeItem("countdownTimer");
+    };
+
     const showExpirationAlert = () => {
         toast.success('TIME IS UP!', {
             duration: 5000,
@@ -134,6 +143,13 @@ export default function Timer() {
                         className="px-10 py-5 bg-indigo-600 text-white rounded-xl font-bold text-2xl hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-500 focus:ring-offset-4 focus:ring-offset-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105"
                     >
                         START
+                    </button>
+                
+                    <button
+                        onClick={resetTimer}
+                        className="px-10 py-5 bg-gray-700 text-gray-200 rounded-xl font-bold text-2xl hover:bg-gray-600 focus:outline-none focus:ring-4 focus:ring-gray-500 focus:ring-offset-4 focus:ring-offset-gray-800 transition-all duration-200 transform hover:scale-105"
+                    >
+                        RESET
                     </button>
                 </div>
             </div>
