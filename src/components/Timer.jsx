@@ -44,6 +44,26 @@ export default function Timer() {
         setSeconds(secs);
     };
 
+    const startTimer = () => {
+        if (totalSecondsRef.current <= 0) return;
+
+        setIsActive(true);
+        setIsPaused(false);
+
+        if (intervalRef.current) clearInterval(intervalRef.current);
+
+        intervalRef.current = setInterval(() => {
+            totalSecondsRef.current -= 1;
+            updateDisplay(totalSecondsRef.current);
+
+            if (totalSecondsRef.current <= 0) {
+                clearInterval(intervalRef.current);
+                setIsActive(false);
+                showExpirationAlert()
+            }
+        }, 1000);
+    }
+
     const showExpirationAlert = () => {
         toast.success('TIME IS UP!', {
             duration: 5000,
@@ -105,6 +125,16 @@ export default function Timer() {
                         />
                         <span className="text-2xl text-gray-400 mt-4">SECONDS</span>
                     </div>
+                </div>
+
+                <div className="flex justify-center space-x-8">
+                    <button
+                        onClick={startTimer}
+                        disabled={totalSecondsRef.current <= 0}
+                        className="px-10 py-5 bg-indigo-600 text-white rounded-xl font-bold text-2xl hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-500 focus:ring-offset-4 focus:ring-offset-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105"
+                    >
+                        START
+                    </button>
                 </div>
             </div>
         </div>
