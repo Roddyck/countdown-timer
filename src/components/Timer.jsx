@@ -60,6 +60,20 @@ export default function Timer() {
         })
     };
 
+    const handleInputChange = (e, unit) => {
+        const value = parseInt(e.target.value) || 0;
+        let totalSeconds = 0;
+
+        if (unit === "minutes") {
+            totalSeconds = value * 60 + seconds
+        } else {
+            totalSeconds = minutes * 60 + value
+        }
+
+        totalSecondsRef.current = totalSeconds;
+        updateDisplay(totalSeconds)
+    };
+
     return (
         <div className="in-h-screen bg-gray-900 flex flex-col items-center justify-center p-4 w-full">
             <Toaster />
