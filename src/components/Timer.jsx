@@ -64,6 +64,17 @@ export default function Timer() {
         }, 1000);
     }
 
+    const togglePause = () => {
+        if (!isActive) return;
+
+        if (isPaused) {
+            startTimer();
+        } else {
+            clearInterval(intervalRef.current);
+            setIsPaused(true);
+        }
+    };
+
     const resetTimer = () => {
         clearInterval(intervalRef.current);
         totalSecondsRef.current = 0;
@@ -104,7 +115,7 @@ export default function Timer() {
     };
 
     return (
-        <div className="in-h-screen bg-gray-900 flex flex-col items-center justify-center p-4 w-full">
+        <div className="fixed inset-0 bg-gray-900 flex items-center justify-center p-4">
             <Toaster />
             <div className="bg-gray-800 rounded-2xl shadow-2xl p-12 w-full max-w-4xl border-2 border-gray-700">
                 <h1 className="text-5xl font-bold text-center text-indigo-400 mb-12">Countdown Timer</h1>
@@ -137,13 +148,22 @@ export default function Timer() {
                 </div>
 
                 <div className="flex justify-center space-x-8">
-                    <button
-                        onClick={startTimer}
-                        disabled={totalSecondsRef.current <= 0}
-                        className="px-10 py-5 bg-indigo-600 text-white rounded-xl font-bold text-2xl hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-500 focus:ring-offset-4 focus:ring-offset-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105"
-                    >
-                        START
-                    </button>
+                    {!isActive ? (
+                        <button
+                            onClick={startTimer}
+                            disabled={totalSecondsRef.current <= 0}
+                            className="px-10 py-5 bg-indigo-600 text-white rounded-xl font-bold text-2xl hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-500 focus:ring-offset-4 focus:ring-offset-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105"
+                        >
+                            START
+                        </button>
+                    ) : (
+                        <button
+                            onClick={togglePause}
+                            className="px-10 py-5 bg-amber-500 text-white rounded-xl font-bold text-2xl hover:bg-amber-600 focus:outline-none focus:ring-4 focus:ring-amber-500 focus:ring-offset-4 focus:ring-offset-gray-800 transition-all duration-200 transform hover:scale-105"
+                        >
+                            {isPaused ? "RESUME" : "PAUSE"}
+                        </button>
+                    )}
                 
                     <button
                         onClick={resetTimer}
