@@ -11,31 +11,43 @@ export default function Timer() {
     const intervalRef = useRef(null);
 
     useEffect(() => {
-        const savedTimer = sessionStorage.getItem("countdownTimer");
-        if (savedTimer) {
-            const { totalSeconds, isActive: savedIsActive, isPaused: savedIsPaused } = JSON.parse(savedTimer);
-            totalSecondsRef.current = totalSeconds;
-            setIsActive(savedIsActive);
-            setIsPaused(savedIsPaused);
+        try {
+            const savedTimer = sessionStorage.getItem("countdownTimer");
+            if (savedTimer) {
+                const { totalSeconds, isActive: savedIsActive, isPaused: savedIsPaused } = JSON.parse(savedTimer);
+                totalSecondsRef.current = totalSeconds;
+                setIsActive(savedIsActive);
+                setIsPaused(savedIsPaused);
 
-            if (savedIsActive && !savedIsPaused) {
-                startTimer()
-            } else {
-                updateDisplay(totalSeconds);
+                if (savedIsActive && !savedIsPaused) {
+                    startTimer()
+                } else {
+                    updateDisplay(totalSeconds);
+                }
             }
+        } catch (err) {
+            console.error("Failed to load timer: ", err);
+            sessionStorage.removeItem("countdownTimer");
         }
     }, []);
 
     useEffect(() => {
-        const timerData = {
-            totalSeconds: totalSecondsRef.current,
-            isActive,
-            isPaused
-        }
+        try {
+            const timerData = {
+                totalSeconds: totalSecondsRef.current,
+                isActive,
+                isPaused
+            };
 
-        sessionStorage.setItem("countdownTimer", JSON.stringify(timerData))
+            sessionStorage.setItem("countdownTimer", JSON.stringify(timerData));
+        } catch (err) {
+            console.error("Failed to save timer: ", err);
+        }
     }, [isActive, isPaused, totalSecondsRef.current]);
 
+    /**
+     * @param {number} totalSeconds
+     */
     const updateDisplay = (totalSeconds) => {
         const mins = Math.floor(totalSeconds / 60);
         const secs = totalSeconds % 60;
@@ -100,6 +112,10 @@ export default function Timer() {
         })
     };
 
+    /**
+     * @param {Object} e
+     * @param {string} unit
+     */
     const handleInputChange = (e, unit) => {
         const value = parseInt(e.target.value) || 0;
         let totalSeconds = 0;
@@ -125,6 +141,7 @@ export default function Timer() {
                         <input
                             type="number"
                             min="0"
+                            max="99"
                             value={minutes.toString().padStart(2, "0")}
                             onChange={(e) => handleInputChange(e, "minutes")}
                             disabled={isActive && !isPaused}
