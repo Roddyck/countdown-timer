@@ -14,13 +14,17 @@ export default function Timer() {
         try {
             const savedTimer = sessionStorage.getItem("countdownTimer");
             if (savedTimer) {
-                const { totalSeconds, isActive: savedIsActive, isPaused: savedIsPaused } = JSON.parse(savedTimer);
+                const {
+                    totalSeconds,
+                    isActive: savedIsActive,
+                    isPaused: savedIsPaused,
+                } = JSON.parse(savedTimer);
                 totalSecondsRef.current = totalSeconds;
                 setIsActive(savedIsActive);
                 setIsPaused(savedIsPaused);
 
                 if (savedIsActive && !savedIsPaused) {
-                    startTimer()
+                    startTimer();
                 } else {
                     updateDisplay(totalSeconds);
                 }
@@ -36,7 +40,7 @@ export default function Timer() {
             const timerData = {
                 totalSeconds: totalSecondsRef.current,
                 isActive,
-                isPaused
+                isPaused,
             };
 
             sessionStorage.setItem("countdownTimer", JSON.stringify(timerData));
@@ -71,10 +75,10 @@ export default function Timer() {
             if (totalSecondsRef.current <= 0) {
                 clearInterval(intervalRef.current);
                 setIsActive(false);
-                showExpirationAlert()
+                showExpirationAlert();
             }
         }, 1000);
-    }
+    };
 
     const togglePause = () => {
         if (!isActive) return;
@@ -97,19 +101,19 @@ export default function Timer() {
     };
 
     const showExpirationAlert = () => {
-        toast.success('TIME IS UP!', {
+        toast.success("TIME IS UP!", {
             duration: 5000,
-            position: 'top-center',
-            icon: '⏰',
+            position: "top-center",
+            icon: "⏰",
             style: {
-                fontSize: '2.5rem',
-                padding: '2rem 3rem',
-                background: '#10b981',
-                color: '#ffffff',
-                borderRadius: '1rem',
-                boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.3)',
+                fontSize: "2.5rem",
+                padding: "2rem 3rem",
+                background: "#10b981",
+                color: "#ffffff",
+                borderRadius: "1rem",
+                boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.3)",
             },
-        })
+        });
     };
 
     /**
@@ -121,20 +125,22 @@ export default function Timer() {
         let totalSeconds = 0;
 
         if (unit === "minutes") {
-            totalSeconds = value * 60 + seconds
+            totalSeconds = value * 60 + seconds;
         } else {
-            totalSeconds = minutes * 60 + value
+            totalSeconds = minutes * 60 + value;
         }
 
         totalSecondsRef.current = totalSeconds;
-        updateDisplay(totalSeconds)
+        updateDisplay(totalSeconds);
     };
 
     return (
         <div className="fixed inset-0 bg-gray-900 flex items-center justify-center p-4">
             <Toaster />
             <div className="bg-gray-800 rounded-2xl shadow-2xl p-12 w-full max-w-4xl border-2 border-gray-700">
-                <h1 className="text-5xl font-bold text-center text-indigo-400 mb-12">Countdown Timer</h1>
+                <h1 className="text-5xl font-bold text-center text-indigo-400 mb-12">
+                    Countdown Timer
+                </h1>
 
                 <div className="flex justify-center items-center mb-16">
                     <div className="flex flex-col items-center mx-4">
@@ -147,20 +153,26 @@ export default function Timer() {
                             disabled={isActive && !isPaused}
                             className="text-8xl font-mono text-center w-40 bg-gray-700 text-white rounded-xl p-4 focus:outline-none focus:ring-4 focus:ring-indigo-500 disabled:opacity-75"
                         />
-                        <span className="text-2xl text-gray-400 mt-4">Minutes</span>
+                        <span className="text-2xl text-gray-400 mt-4">
+                            Minutes
+                        </span>
                     </div>
-                    <span className="text-8xl font-bold mx-4 text-gray-400">:</span>
+                    <span className="text-8xl font-bold mx-4 text-gray-400">
+                        :
+                    </span>
                     <div className="flex flex-col items-center mx-4">
                         <input
                             type="number"
                             min="0"
                             max="59"
-                            value={seconds.toString().padStart(2, '0')}
-                            onChange={(e) => handleInputChange(e, 'seconds')}
+                            value={seconds.toString().padStart(2, "0")}
+                            onChange={(e) => handleInputChange(e, "seconds")}
                             disabled={isActive && !isPaused}
                             className="text-8xl font-mono text-center w-40 bg-gray-700 text-white rounded-xl p-4 focus:outline-none focus:ring-4 focus:ring-indigo-500 disabled:opacity-75"
                         />
-                        <span className="text-2xl text-gray-400 mt-4">SECONDS</span>
+                        <span className="text-2xl text-gray-400 mt-4">
+                            SECONDS
+                        </span>
                     </div>
                 </div>
 
@@ -181,7 +193,7 @@ export default function Timer() {
                             {isPaused ? "RESUME" : "PAUSE"}
                         </button>
                     )}
-                
+
                     <button
                         onClick={resetTimer}
                         className="px-10 py-5 bg-gray-700 text-gray-200 rounded-xl font-bold text-2xl hover:bg-gray-600 focus:outline-none focus:ring-4 focus:ring-gray-500 focus:ring-offset-4 focus:ring-offset-gray-800 transition-all duration-200 transform hover:scale-105"
@@ -191,5 +203,5 @@ export default function Timer() {
                 </div>
             </div>
         </div>
-    )
+    );
 }
